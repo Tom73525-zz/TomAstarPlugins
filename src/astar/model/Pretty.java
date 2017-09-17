@@ -14,15 +14,29 @@ import astar.util.Node;
  */
 public class Pretty implements IModel {
     
-    protected char[][] tileMap = null;
+    
 
     @Override
     public void init(char[][] tileMap) {
-        this.tileMap = tileMap;
+        
     }
 
     @Override
     public double shape(double heuristic, Node curNode, Node adjNode) {
+        System.out.println(curNode.getSteps());
+        if(curNode.getSteps()<=2)
+            return heuristic;      
+        Node child = new Node(curNode);
+        Node parent = new Node(curNode.getParent());
+        Node grandparent = new Node(curNode.getParent().getParent());
+        if(( grandparent.getCol() - parent.getCol() ) != ( parent.getCol() - child.getCol()) 
+                || (grandparent.getRow() - parent.getRow()) != ( parent.getRow() - child.getRow() ))
+        {
+            return (heuristic+2);
+            
+        }
+        
+        
         return heuristic;
     }
 
