@@ -5,10 +5,30 @@
  */
 package astar.model;
 
+import astar.plugin.IModel;
+import astar.util.Node;
+
 /**
  *
  * @author Tom
  */
-public class Pretty {
+public class Pretty implements IModel {
+    
+    protected char[][] tileMap = null;
+
+    @Override
+    public void init(char[][] tileMap) {
+        this.tileMap = tileMap;
+    }
+
+    @Override
+    public double shape(double heuristic, Node curNode, Node adjNode) {
+        return heuristic;
+    }
+
+    @Override
+    public void complete(Node curNode) {
+        
+    }
     
 }
