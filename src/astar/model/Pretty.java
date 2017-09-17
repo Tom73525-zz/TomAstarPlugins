@@ -24,45 +24,47 @@ public class Pretty implements IModel {
 
     @Override
     public double shape(double heuristic, Node curNode, Node adjNode) {
-        System.out.println(curNode.getSteps());
         
-        if(curNode.getSteps()<=2)
+        if(curNode.getSteps()<=2){
+            
             return heuristic;    
+        }
         
-        Node ai = new Node(adjNode);
-        Node ai_1 = new Node(curNode);
-        Node ai_2 = new Node(curNode.getParent());
+        
+        Node adjacentNode = new Node(adjNode);
+        Node currentNode = new Node(curNode);
+        Node cur_parentNode = new Node(curNode.getParent());
         
         if(adjNode.getInertia()==8){
+            
             adjNode.setInertia(0);
         }
         
-        if(( ai_2.getCol() - ai_1.getCol() ) != ( ai_1.getCol() - ai.getCol()) 
-                || (ai_2.getRow() - ai_1.getRow()) != ( ai_1.getRow() - ai.getRow() ) 
+        if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
+                || ( cur_parentNode.getRow() - currentNode.getRow() ) != ( currentNode.getRow() - adjacentNode.getRow() ) 
                 && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
             
             heuristic+=600;
             
         }
-        else
-        {
+        else{
+            
             adjNode.setInertia(curNode.getInertia()+1);
+            
         }
         
         if( tracksWall( tileMap , adjNode )
             ||  tracksWall( tileMap , curNode ) ) {
+            
             heuristic+=10000;
         }  
         
        
-        if(( ai_2.getCol() - ai_1.getCol() ) != ( ai_1.getCol() - ai.getCol()) 
-                || (ai_2.getRow() - ai_1.getRow()) != ( ai_1.getRow() - ai.getRow() ))
-        {
+        if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
+                || (cur_parentNode.getRow() - currentNode.getRow()) != ( currentNode.getRow() - adjacentNode.getRow() )){
             heuristic+=2;
-            
         }
-         else
-        {
+        else{
             adjNode.setInertia(curNode.getInertia()+1);
         }
         
