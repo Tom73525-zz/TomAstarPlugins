@@ -16,9 +16,11 @@ import astar.util.Node;
 public class Stealthy implements IModel{
 
     protected char[][] tileMap; 
+    
     @Override
     public void init(char[][] tileMap) {
-       this.tileMap = tileMap;
+        
+       this.tileMap = tileMap;    //  Store world tileMap in class member variable  
     }
 
     @Override
@@ -27,7 +29,7 @@ public class Stealthy implements IModel{
         if( tracksWall( tileMap , adjNode )
             ||  tracksWall( tileMap , curNode ) ) {
             
-            heuristic-=heuristic*0.75;
+            heuristic-=heuristic*0.75;    //  The agent is discounted whenever it tracks a wall.
         }  
        
         return heuristic;

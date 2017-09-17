@@ -18,8 +18,9 @@ public class Pretty implements IModel {
     protected char[][] tileMap = null;
 
     @Override
-    public void init(char[][] tileMap) {
-        this.tileMap = tileMap; 
+    public void init(char[][] tileMap) { 
+        
+        this.tileMap = tileMap;    // Store world tileMap in class memeber variable.                       
     }
 
     @Override
@@ -30,15 +31,18 @@ public class Pretty implements IModel {
             return heuristic;    
         }
         
-        
         Node adjacentNode = new Node(adjNode);
         Node currentNode = new Node(curNode);
         Node cur_parentNode = new Node(curNode.getParent());
         
+        //Experimentally determined value of tau(Inertia streak) is 8
         if(adjNode.getInertia()==8){
             
-            adjNode.setInertia(0);
+            adjNode.setInertia(0);  // if inertia reaches 8, it is reset
         }
+        
+        // Zag condition: P' Zags when A(i-2).col - A(i-1).col != A(i-1).col - A(i).col 
+        //                          or A(i-2).row - A(i-1).row != A(i-1).col - Ai(i).row
         
         if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
                 || ( cur_parentNode.getRow() - currentNode.getRow() ) != ( currentNode.getRow() - adjacentNode.getRow() ) 
@@ -49,22 +53,23 @@ public class Pretty implements IModel {
         }
         else{
             
-            adjNode.setInertia(curNode.getInertia()+1);
+            adjNode.setInertia(curNode.getInertia()+1);     // if the agent does not zag, inertia is incremented by 1. 
             
         }
         
         if( tracksWall( tileMap , adjNode )
             ||  tracksWall( tileMap , curNode ) ) {
             
-            heuristic+=10000;
+            heuristic+=10000;                              // penalty is imposed on the agent whenever it tracks a wall/obstacle
         }  
         
-       
         if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
                 || (cur_parentNode.getRow() - currentNode.getRow()) != ( currentNode.getRow() - adjacentNode.getRow() )){
-            heuristic+=2;
+            
+            heuristic+=2;                                  // penalty is also imposed on the agent whenever it zags.  
         }
         else{
+            
             adjNode.setInertia(curNode.getInertia()+1);
         }
         
