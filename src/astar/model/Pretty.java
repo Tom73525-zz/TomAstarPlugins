@@ -41,7 +41,7 @@ public class Pretty implements IModel {
                 || (ai_2.getRow() - ai_1.getRow()) != ( ai_1.getRow() - ai.getRow() ) 
                 && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
             
-            heuristic+=13;
+            heuristic+=600;
             
         }
         else
@@ -51,7 +51,7 @@ public class Pretty implements IModel {
         
         if( tracksWall( tileMap , adjNode )
             ||  tracksWall( tileMap , curNode ) ) {
-            heuristic+=100;
+            heuristic+=10000;
         }  
         
        
