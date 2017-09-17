@@ -29,29 +29,41 @@ public class Pretty implements IModel {
         if(curNode.getSteps()<=2)
             return heuristic;    
         
-        Node child = new Node(curNode);
-        Node parent = new Node(curNode.getParent());
-        Node grandparent = new Node(curNode.getParent().getParent());
+        Node ai = new Node(adjNode);
+        Node ai_1 = new Node(curNode);
+        Node ai_2 = new Node(curNode.getParent());
         
-        if(( grandparent.getCol() - parent.getCol() ) != ( parent.getCol() - child.getCol()) 
-                || (grandparent.getRow() - parent.getRow()) != ( parent.getRow() - child.getRow() ) 
-                && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
-            return heuristic+=13;
-            
+        if(adjNode.getInertia()==8){
+            adjNode.setInertia(0);
         }
         
-        if(( ( tracksWall( tileMap , curNode.getParent() ) 
-                || ( tracksWall( tileMap , curNode ) || ( tracksWall( tileMap, adjNode.getParent()) 
-                || (tracksWall( tileMap, adjNode.getParent() ) ) ) ) ) ) ) {
-            return heuristic+=10;
+        if(( ai_2.getCol() - ai_1.getCol() ) != ( ai_1.getCol() - ai.getCol()) 
+                || (ai_2.getRow() - ai_1.getRow()) != ( ai_1.getRow() - ai.getRow() ) 
+                && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
+            
+            heuristic+=13;
+            
+        }
+        else
+        {
+            adjNode.setInertia(curNode.getInertia()+1);
+        }
+        
+        if( tracksWall( tileMap , adjNode )
+            ||  tracksWall( tileMap , curNode ) ) {
+            heuristic+=100;
         }  
         
        
-        if(( grandparent.getCol() - parent.getCol() ) != ( parent.getCol() - child.getCol()) 
-                || (grandparent.getRow() - parent.getRow()) != ( parent.getRow() - child.getRow() ))
+        if(( ai_2.getCol() - ai_1.getCol() ) != ( ai_1.getCol() - ai.getCol()) 
+                || (ai_2.getRow() - ai_1.getRow()) != ( ai_1.getRow() - ai.getRow() ))
         {
-            return heuristic+=2;
+            heuristic+=2;
             
+        }
+         else
+        {
+            adjNode.setInertia(curNode.getInertia()+1);
         }
         
         return heuristic;
