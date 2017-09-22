@@ -26,10 +26,11 @@ public class Pretty implements IModel {
     @Override
     public double shape(double heuristic, Node curNode, Node adjNode) {
         
-        if(curNode.getSteps()<=2){
+        if(curNode.getParent()==null){
             
-            return heuristic;    
+            return heuristic;
         }
+            
         
         Node adjacentNode = new Node(adjNode);
         Node currentNode = new Node(curNode);
@@ -44,40 +45,32 @@ public class Pretty implements IModel {
         // Zag condition: P' Zags when A(i-2).col - A(i-1).col != A(i-1).col - A(i).col 
         //                          or A(i-2).row - A(i-1).row != A(i-1).col - Ai(i).row
         
-        if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
-                || ( cur_parentNode.getRow() - currentNode.getRow() ) != ( currentNode.getRow() - adjacentNode.getRow() ) 
-                && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
-            
-            heuristic+=300;
-            
+        boolean isZagging = ( cur_parentNode.getCol() - currentNode.getCol() ) 
+                             != ( currentNode.getCol() - adjacentNode.getCol())
+                                || ( cur_parentNode.getRow() - currentNode.getRow() ) 
+                                    != ( currentNode.getRow() - adjacentNode.getRow() );
+        
+        boolean isTracking = (tracksWall( tileMap, adjNode ) ||tracksWall( tileMap, curNode ) );
+        
+        
+        if( !isZagging && !isTracking ){
+            adjNode.setInertia(curNode.getInertia()+1);    // if the agent does not zag, inertia is incremented by 1. 
+            return heuristic;
+        }
+        else if( isZagging && !isTracking ){
+            return heuristic+2;                            // penalty is also imposed on the agent whenever it zags.  
+        }
+        else if( !isZagging && isTracking){
+            return heuristic+10;                           // penalty is imposed on the agent whenever it tracks a wall/obstacle
         }
         else{
-            
-            adjNode.setInertia(curNode.getInertia()+1);     // if the agent does not zag, inertia is incremented by 1. 
-            
+            return heuristic+13;
         }
-        
-        if( tracksWall( tileMap , adjNode )
-            ||  tracksWall( tileMap , curNode ) ) {
-            
-            heuristic+=10000;                              // penalty is imposed on the agent whenever it tracks a wall/obstacle
-        }  
-        
-        if(( cur_parentNode.getCol() - currentNode.getCol() ) != ( currentNode.getCol() - adjacentNode.getCol()) 
-                || (cur_parentNode.getRow() - currentNode.getRow()) != ( currentNode.getRow() - adjacentNode.getRow() )){
-            
-            heuristic+=2;                                  // penalty is also imposed on the agent whenever it zags.  
-        }
-        else{
-            
-            adjNode.setInertia(curNode.getInertia()+1);
-        }
-        
-        return heuristic;
     }
 
     @Override
     public void complete(Node curNode) {
+        
         
     }
     
