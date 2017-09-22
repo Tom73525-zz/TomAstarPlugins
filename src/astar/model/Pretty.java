@@ -38,7 +38,7 @@ public class Pretty implements IModel {
         //Experimentally determined value of tau(Inertia streak) is 8
         if(adjNode.getInertia()==8){
             
-            adjNode.setInertia(0);  // if inertia reaches 8, it is reset
+            return heuristic;  // if inertia reaches 8, it is reset
         }
         
         // Zag condition: P' Zags when A(i-2).col - A(i-1).col != A(i-1).col - A(i).col 
@@ -48,7 +48,7 @@ public class Pretty implements IModel {
                 || ( cur_parentNode.getRow() - currentNode.getRow() ) != ( currentNode.getRow() - adjacentNode.getRow() ) 
                 && ( ( tracksWall( tileMap , curNode ) && tracksWall( tileMap, adjNode ) ) ) ){
             
-            heuristic+=600;
+            heuristic+=300;
             
         }
         else{
