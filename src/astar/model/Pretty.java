@@ -49,7 +49,7 @@ public class Pretty implements IModel {
         
         if(adjNode.getInertia()>=8){
             
-            return heuristic;  // if inertia reaches 8, it is reset
+            return heuristic;                                                   // if inertia reaches 8, it is reset
         }
         else if( !isZagging && !isTracking ){
             adjNode.setInertia(curNode.getInertia()+1);                         // if the agent does not zag, inertia is incremented by 1. 
@@ -60,10 +60,10 @@ public class Pretty implements IModel {
         }
         else if( !isZagging && isTracking){
             adjNode.setInertia(curNode.getInertia()+1);
-            return heuristic+1000;                                              // penalty is imposed on the agent whenever it tracks a wall/obstacle
+            return heuristic+10;                                                // penalty is imposed on the agent whenever it tracks a wall/obstacle
         }
         else{
-            return heuristic+1300;
+            return heuristic+13;
         }
     }
 
@@ -75,13 +75,13 @@ public class Pretty implements IModel {
         while(curNode.getParent().getParent() != null)
         {
         
-            System.out.println("go");
+   
             boolean isZagging = ( curNode.getParent().getParent().getCol() - curNode.getParent().getCol() ) 
                              != ( curNode.getParent().getCol() - curNode.getCol())
                                 || ( curNode.getParent().getParent().getRow() - curNode.getParent().getRow() ) 
                                     != ( curNode.getParent().getRow() - curNode.getRow() );
             if( isZagging ){
-                System.out.println("Zagged");
+                
                 shape(curNode.getCost(),curNode.getParent(),curNode);           // penalty is also imposed on the agent whenever it zags.  
                 
                 
