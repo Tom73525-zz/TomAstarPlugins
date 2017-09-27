@@ -7,6 +7,7 @@ package astar.model;
 
 import astar.plugin.IModel;
 import static astar.util.Helper.tracksWall;
+import static astar.util.Helper.isObstacle;
 import astar.util.Node;
 
 /**
@@ -70,25 +71,91 @@ public class Pretty implements IModel {
     @Override
     public void complete(Node curNode) {
         
-        
-        
-        while(curNode.getParent().getParent() != null)
+        while(curNode.getParent().getParent().getParent()!=null)
         {
-        
-   
-            boolean isZagging = ( curNode.getParent().getParent().getCol() - curNode.getParent().getCol() ) 
-                             != ( curNode.getParent().getCol() - curNode.getCol())
-                                || ( curNode.getParent().getParent().getRow() - curNode.getParent().getRow() ) 
-                                    != ( curNode.getParent().getRow() - curNode.getRow() );
-            if( isZagging ){
-                
-                shape(curNode.getCost(),curNode.getParent(),curNode);           // penalty is also imposed on the agent whenever it zags.  
-                
-                
-            }
+            fixBridges(curNode);
+            fixCaterCorners(curNode);
             curNode=curNode.getParent();
         }
         
+        
     }
     
+    public void fixBridges(Node curNode){
+        
+        Node parent = curNode.getParent();
+        Node grandParent = curNode.getParent().getParent();
+        Node greatGrandParent = curNode.getParent().getParent().getParent();
+        if( curNode.getRow() == greatGrandParent.getRow() ){
+            
+            parent.setRow(curNode.getRow());
+            grandParent.setRow(curNode.getRow());
+        }
+        else if( curNode.getCol() == greatGrandParent.getCol()){
+             parent.setCol(curNode.getCol());
+             grandParent.setCol(curNode.getCol());
+             
+        }
+    }
+    
+    public void fixCaterCorners(Node curNode){
+        
+        Node parent = curNode.getParent();
+        Node newNode = null;
+        if(isObstacle(tileMap,curNode.getCol()+1,curNode.getRow()-1)){
+            
+            newNode = new Node( parent.getCol() ,parent.getRow()+1 ,parent );
+            parent.setChild(newNode);
+            newNode.setParent(parent);
+            newNode.setChild(curNode);
+            curNode.setParent(newNode);
+            curNode.setRow(curNode.getRow()+1);
+        }
+        
+        if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()+1)){
+            
+            newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
+            parent.setChild(newNode);
+            newNode.setParent(parent);
+            newNode.setChild(curNode);
+            curNode.setParent(newNode);
+            curNode.setCol(curNode.getCol()+1);
+        }
+        
+        if(isObstacle(tileMap, curNode.getCol()+1,curNode.getRow()+1)){
+            
+            newNode = new Node( parent.getCol()-1, parent.getRow(), parent );
+            parent.setChild(newNode);
+            newNode.setParent(parent);
+            newNode.setChild(curNode);
+            curNode.setParent(newNode);
+            curNode.setCol(curNode.getCol()-1);
+        }
+        if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()-1)){
+            
+            if(curNode.getChild().getChild().getCol()>curNode.getCol()){
+                newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
+                parent.setChild(newNode);
+                newNode.setParent(parent);
+                newNode.setChild(curNode);
+                curNode.setParent(newNode);
+                curNode.setCol(curNode.getCol()+1);
+            }
+            else
+            {
+                newNode = new Node( parent.getCol(), parent.getRow()+1, parent );
+                parent.setChild(newNode);
+                newNode.setParent(parent);
+                newNode.setChild(curNode);
+                curNode.setParent(newNode);
+                curNode.setRow(curNode.getRow()+1);
+            }
+        }
+               
+    }
+            
+            
+        
 }
+    
+
