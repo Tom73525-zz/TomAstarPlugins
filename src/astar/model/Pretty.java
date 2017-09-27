@@ -70,23 +70,27 @@ public class Pretty implements IModel {
 
     @Override
     public void complete(Node curNode) {
+       
         
-        
+       //Tracing the agent's nodes from the goal node upto the starting node.
        while(curNode.getParent().getParent().getParent()!=null)
         {
             fixBridges(curNode);
             fixCaterCorners(curNode);
             curNode=curNode.getParent();
         }
-       
-        
         
     }
     
     public void fixBridges(Node curNode){
         
+        /*
+            This method corrects all possible bridges and roofs.
+        */
+        
         Node parent = curNode.getParent();
         Node grandParent = curNode.getParent().getParent();
+        
         Node greatGrandParent = curNode.getParent().getParent().getParent();
         if( curNode.getRow() == greatGrandParent.getRow() ){
             
@@ -102,15 +106,24 @@ public class Pretty implements IModel {
     
     public void fixCaterCorners(Node curNode){
         
-        System.out.println("0");
+        /*
+            This method corrects all of the possible catercornering of the agent
+            against the wall.
+        */
+        
         Node parent = curNode.getParent();
         Node child = null;
+        
         if(curNode.getChild()!=null){
             child=curNode.getChild();
         }
+        
             
         Node newNode = null;
+        
+        //Bottom-Left Corner Correction
         if(isObstacle(tileMap,curNode.getCol()+1,curNode.getRow()-1)){
+            
             if(parent.getRow()<child.getRow()){
                 System.out.println("1");
                 newNode = new Node( parent.getCol() ,parent.getRow()+1 ,parent );
@@ -130,8 +143,9 @@ public class Pretty implements IModel {
             }
         }
         
+        //Top-Right Corner Correction
         if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()+1)){
-            System.out.println("2");
+  
             if(parent.getRow()<child.getRow()){
                 newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
                 parent.setChild(newNode);
@@ -152,8 +166,9 @@ public class Pretty implements IModel {
             
         }
         
+        //Top-Left Corner Correction
         if(isObstacle(tileMap, curNode.getCol()+1,curNode.getRow()+1)){
-             System.out.println("3");
+            
             if(parent.getRow()<child.getRow()){
                 
                 newNode = new Node( parent.getCol()-1, parent.getRow(), parent );
@@ -175,6 +190,7 @@ public class Pretty implements IModel {
             }
         }
         
+        //Bottom-Left Corner Correction
         if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()-1)){
             
             if(parent.getCol()<child.getCol()){
@@ -195,12 +211,6 @@ public class Pretty implements IModel {
                 curNode.setParent(newNode);
                 curNode.setRow(curNode.getRow()+1);
             }
-        }
-               
-    }
-            
-            
-        
+        }       
+    }          
 }
-    
-
