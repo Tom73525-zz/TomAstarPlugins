@@ -71,12 +71,14 @@ public class Pretty implements IModel {
     @Override
     public void complete(Node curNode) {
         
-        while(curNode.getParent().getParent().getParent()!=null)
+        
+       while(curNode.getParent().getParent().getParent()!=null)
         {
             fixBridges(curNode);
             fixCaterCorners(curNode);
             curNode=curNode.getParent();
         }
+       
         
         
     }
@@ -100,40 +102,37 @@ public class Pretty implements IModel {
     
     public void fixCaterCorners(Node curNode){
         
+        System.out.println("0");
         Node parent = curNode.getParent();
+        Node child = null;
+        if(curNode.getChild()!=null){
+            child=curNode.getChild();
+        }
+            
         Node newNode = null;
         if(isObstacle(tileMap,curNode.getCol()+1,curNode.getRow()-1)){
-            
-            newNode = new Node( parent.getCol() ,parent.getRow()+1 ,parent );
-            parent.setChild(newNode);
-            newNode.setParent(parent);
-            newNode.setChild(curNode);
-            curNode.setParent(newNode);
-            curNode.setRow(curNode.getRow()+1);
+            if(parent.getRow()<child.getRow()){
+                System.out.println("1");
+                newNode = new Node( parent.getCol() ,parent.getRow()+1 ,parent );
+                parent.setChild(newNode);
+                newNode.setParent(parent);
+                newNode.setChild(curNode);
+                curNode.setParent(newNode);
+                curNode.setRow(curNode.getRow()+1);
+            }
+            else{
+                newNode = new Node( child.getCol() ,child.getRow()+1, child );
+                child.setParent(newNode);
+                newNode.setChild(child);
+                newNode.setParent(curNode);
+                curNode.setChild(newNode);
+                curNode.setRow(curNode.getRow()+1);
+            }
         }
         
         if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()+1)){
-            
-            newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
-            parent.setChild(newNode);
-            newNode.setParent(parent);
-            newNode.setChild(curNode);
-            curNode.setParent(newNode);
-            curNode.setCol(curNode.getCol()+1);
-        }
-        
-        if(isObstacle(tileMap, curNode.getCol()+1,curNode.getRow()+1)){
-            
-            newNode = new Node( parent.getCol()-1, parent.getRow(), parent );
-            parent.setChild(newNode);
-            newNode.setParent(parent);
-            newNode.setChild(curNode);
-            curNode.setParent(newNode);
-            curNode.setCol(curNode.getCol()-1);
-        }
-        if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()-1)){
-            
-            if(curNode.getChild().getChild().getCol()>curNode.getCol()){
+            System.out.println("2");
+            if(parent.getRow()<child.getRow()){
                 newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
@@ -141,8 +140,54 @@ public class Pretty implements IModel {
                 curNode.setParent(newNode);
                 curNode.setCol(curNode.getCol()+1);
             }
-            else
-            {
+            else{
+                
+                newNode = new Node( child.getCol()+1, child.getRow(), child);
+                child.setParent(newNode);
+                newNode.setChild(child);
+                newNode.setParent(curNode);
+                curNode.setChild(newNode);
+                curNode.setCol(curNode.getCol()+1);
+            }
+            
+        }
+        
+        if(isObstacle(tileMap, curNode.getCol()+1,curNode.getRow()+1)){
+             System.out.println("3");
+            if(parent.getRow()<child.getRow()){
+                
+                newNode = new Node( parent.getCol()-1, parent.getRow(), parent );
+                parent.setChild(newNode);
+                newNode.setParent(parent);
+                newNode.setChild(curNode);
+                curNode.setParent(newNode);
+                curNode.setCol(curNode.getCol()-1);
+            }
+            else{
+                
+                newNode = new Node( child.getCol()-1, child.getRow(), child);
+                child.setParent(newNode);
+                newNode.setChild(child);
+                newNode.setParent(curNode);
+                curNode.setChild(newNode);
+                curNode.setCol(curNode.getCol()-1);
+                
+            }
+        }
+        
+        if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()-1)){
+            
+            if(parent.getCol()<child.getCol()){
+                 System.out.println("4");
+                newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
+                parent.setChild(newNode);
+                newNode.setParent(parent);
+                newNode.setChild(curNode);
+                curNode.setParent(newNode);
+                curNode.setCol(curNode.getCol()+1);
+            }
+            else{
+                 System.out.println("5");
                 newNode = new Node( parent.getCol(), parent.getRow()+1, parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
