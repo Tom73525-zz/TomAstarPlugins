@@ -125,7 +125,7 @@ public class Pretty implements IModel {
         if(isObstacle(tileMap,curNode.getCol()+1,curNode.getRow()-1)){
             
             if(parent.getRow()<child.getRow()){
-                System.out.println("1");
+                
                 newNode = new Node( parent.getCol() ,parent.getRow()+1 ,parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
@@ -134,6 +134,7 @@ public class Pretty implements IModel {
                 curNode.setRow(curNode.getRow()+1);
             }
             else{
+                
                 newNode = new Node( child.getCol() ,child.getRow()+1, child );
                 child.setParent(newNode);
                 newNode.setChild(child);
@@ -147,6 +148,7 @@ public class Pretty implements IModel {
         if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()+1)){
   
             if(parent.getRow()<child.getRow()){
+                
                 newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
@@ -194,7 +196,7 @@ public class Pretty implements IModel {
         if(isObstacle(tileMap,curNode.getCol()-1,curNode.getRow()-1)){
             
             if(parent.getCol()<child.getCol()){
-                 System.out.println("4");
+                
                 newNode = new Node( parent.getCol()+1, parent.getRow(), parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
@@ -203,7 +205,7 @@ public class Pretty implements IModel {
                 curNode.setCol(curNode.getCol()+1);
             }
             else{
-                 System.out.println("5");
+                 
                 newNode = new Node( parent.getCol(), parent.getRow()+1, parent );
                 parent.setChild(newNode);
                 newNode.setParent(parent);
